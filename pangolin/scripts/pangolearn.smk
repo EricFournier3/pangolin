@@ -111,7 +111,7 @@ rule pangolearn:
         # should output a csv file with no headers but with columns similar to:
         # "taxon,lineage,SH-alrt,UFbootstrap"
         """
-        pangolearn.py --header-file {input.header:q} --model-file {input.model:q} --reference-file {input.reference:q} --fasta {input.fasta} -o {output[0]}
+        pangolearn.py --header-file {input.header:q} --model-file {input.model:q} --reference-file {input.reference:q} --fasta {input.fasta:q} -o {output[0]:q}
         """
 
 rule add_failed_seqs:
@@ -234,13 +234,13 @@ rule overwrite:
         with open(input.b117_variants, "r") as f:
             reader = csv.DictReader(f)
             for row in reader:
-                if int(row["alt_count"]) > 4:
+                if int(row["alt_count"]) > 4 and int(row["ref_count"])<6:
                     b117[row["query"]] = row["alt_count"]
         b1351 = {}
         with open(input.b1351_variants, "r") as f:
             reader = csv.DictReader(f)
             for row in reader:
-                if int(row["alt_count"]) > 4:
+                if int(row["alt_count"]) > 4 and int(row["ref_count"])<2:
                     b1351[row["query"]] = row["alt_count"]
         p1 = {}
         with open(input.p1_variants, "r") as f:
@@ -252,7 +252,7 @@ rule overwrite:
         with open(input.p2_variants, "r") as f:
             reader = csv.DictReader(f)
             for row in reader:
-                if int(row["alt_count"]) > 4:
+                if int(row["alt_count"]) > 4 and int(row["ref_count"])<4:
                     p2[row["query"]] = row["alt_count"]
 
         with open(output.csv, "w") as fw:
